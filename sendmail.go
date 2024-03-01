@@ -63,7 +63,7 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 	return nil, nil
 }
 
-func SendMail(MailAddr string, MSGSubject string, Message string, settings SMTPSettings) error {
+func SendMail(MailAddr string, MSGSubject string, Message string, settings SMTPSettings, Debuglevel int) error {
 	var c *smtp.Client
 	var err error
 
@@ -89,8 +89,14 @@ func SendMail(MailAddr string, MSGSubject string, Message string, settings SMTPS
 	message += "\r\n" + body
 	servername := fmt.Sprintf("%s:%d", settings.SMTPserver, settings.SMTPPort)
 	host := settings.SMTPserver
+	if Debuglevel > 0 {
+		fmt.Println("SMTP server:", servername)
+	}
 
 	authlogin := LoginAuth(settings.Username, settings.SMTPPassword)
+	if Debuglevel > 0 {
+		fmt.Println("Login Auth:", authlogin)
+	}
 
 	tlsconfig := &tls.Config{
 		InsecureSkipVerify: true,
@@ -167,6 +173,7 @@ func main() {
 	Usefile := flag.String("file", "", "использовать файл - указать имя файла JSON")
 	Port := flag.Int("port", 25, "Порт smtp сервера")
 	TLSusage := flag.Bool("tls", false, "Использовать TLS, по умолчаию выключено и используется STARTTLS")
+	DebugLevel := flag.Int("debug", 0, "Уровень отладки, по умолчанию ноль")
 	flag.Parse()
 
 	if len(*Mailto) < 5 {
@@ -230,7 +237,7 @@ func main() {
 		GlobalDataSt.EntireSettings.SMTPParams.Username = GlobalDataSt.EntireSettings.SMTPParams.MailFrom
 	}
 
-	SMTPerr := SendMail(*Mailto, *Subject, *Message, GlobalDataSt.EntireSettings.SMTPParams)
+	SMTPerr := SendMail(*Mailto, *Subject, *Message, GlobalDataSt.EntireSettings.SMTPParams, *DebugLevel)
 	if SMTPerr != nil {
 		fmt.Println(SMTPerr)
 	} else {
