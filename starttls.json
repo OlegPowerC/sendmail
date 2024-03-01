@@ -1,0 +1,12 @@
+{
+  "smtp_params":{
+    "mail_from":"user@yandex.ru",
+    "mail_from_name":"LArañiaTools",
+    "smtpserver":"smtp.yandex.ru",
+    "smtpport":25,
+    "username": "user@yandex.ru",
+    "smtp_password":"Password123%",
+    "domain": "yandex.ru",
+    "tls": false
+  }
+}
