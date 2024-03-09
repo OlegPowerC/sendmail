@@ -186,7 +186,7 @@ func main() {
 		errcounter++
 	}
 
-	if len(*Message) < 5 {
+	if len(*Message) < 1 {
 		fmt.Println("Пожалуйста укажите тело мисьма (параметр -msg пример: -msg \"Test message\" ")
 		errcounter++
 	}
